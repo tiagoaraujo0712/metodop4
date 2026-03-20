@@ -208,16 +208,23 @@ const periods = [
 ];
 
 export default function Onboarding() {
-  const { update } = useAppState();
+  const { state, update } = useAppState();
   const navigate = useNavigate();
-  const [step, setStep] = useState(0);
-  const [name, setName] = useState("");
+  const [searchParams] = useSearchParams();
+  const isRedoDISC = searchParams.get("redo") === "disc";
+
+  const [step, setStep] = useState(isRedoDISC ? 2 : 0);
+  const [name, setName] = useState(isRedoDISC && state.user ? state.user.name : "");
   const [discAnswers, setDiscAnswers] = useState<DISCProfile[]>([]);
   const [currentDiscQ, setCurrentDiscQ] = useState(0);
   const [p4Answers, setP4Answers] = useState<P4Blockage[]>([]);
   const [currentP4Q, setCurrentP4Q] = useState(0);
-  const [energySlots, setEnergySlots] = useState<EnergySlot[]>([]);
-  const [procLevel, setProcLevel] = useState(5);
+  const [energySlots, setEnergySlots] = useState<EnergySlot[]>(
+    isRedoDISC && state.user ? state.user.energySlots : []
+  );
+  const [procLevel, setProcLevel] = useState(
+    isRedoDISC && state.user ? state.user.procrastinationLevel : 5
+  );
 
   // Steps: 0=intro, 1=name, 2=disc test, 3=p4 blockage, 4=procrastination, 5=energy, 6=result
   const totalSteps = 7;
