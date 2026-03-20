@@ -30,6 +30,8 @@ const microInsights = [
 
 export default function Dashboard() {
   const { state, update } = useAppState();
+  const { pushDailyEntry } = useSupabaseSync();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   const [todayEnergy, setTodayEnergy] = useState<EnergyLevel | null>(null);
 
