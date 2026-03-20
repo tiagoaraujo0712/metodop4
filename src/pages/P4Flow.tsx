@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
+import { useSupabaseSync } from "@/hooks/useSupabaseSync";
 import { getTodayKey, EnergyLevel } from "@/lib/store";
 import { getP4FlowCopy, getEnergyTaskSuggestion } from "@/lib/personalization";
 import { Button } from "@/components/ui/button";
