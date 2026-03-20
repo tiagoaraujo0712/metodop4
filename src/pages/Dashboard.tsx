@@ -59,16 +59,20 @@ export default function Dashboard() {
 
   function handleEnergySelect(level: EnergyLevel) {
     setTodayEnergy(level);
+    const entry = {
+      date: getTodayKey(),
+      energyLevel: level,
+      p4Completed: todayEntry?.p4Completed || false,
+      ...todayEntry,
+    };
     update((s) => {
       const entries = s.dailyEntries.filter((e) => e.date !== getTodayKey());
       return {
         ...s,
-        dailyEntries: [
-          ...entries,
-          { date: getTodayKey(), energyLevel: level, p4Completed: todayEntry?.p4Completed || false, ...todayEntry },
-        ],
+        dailyEntries: [...entries, entry],
       };
     });
+    pushDailyEntry(entry);
   }
 
   function getCurrentPeriod() {
