@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { loadState } from "@/lib/store";
 import InstallPWA from "@/components/InstallPWA";
+import SplashScreen from "@/components/SplashScreen";
 import ScrollToTop from "@/components/ScrollToTop";
 import Auth from "./pages/Auth";
 import Guest from "./pages/Guest";
@@ -51,23 +52,25 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/" element={<RootRedirect />} />
-            <Route path="/auth" element={<AuthRedirect><Auth /></AuthRedirect>} />
-            <Route path="/guest" element={<Guest />} />
-            <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/p4" element={<ProtectedRoute><P4Flow /></ProtectedRoute>} />
-            <Route path="/coach" element={<ProtectedRoute><Coach /></ProtectedRoute>} />
-            <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/metodo" element={<MetodoP4 />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <InstallPWA />
-        </BrowserRouter>
+        <SplashScreen>
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/" element={<RootRedirect />} />
+              <Route path="/auth" element={<AuthRedirect><Auth /></AuthRedirect>} />
+              <Route path="/guest" element={<Guest />} />
+              <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/p4" element={<ProtectedRoute><P4Flow /></ProtectedRoute>} />
+              <Route path="/coach" element={<ProtectedRoute><Coach /></ProtectedRoute>} />
+              <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/metodo" element={<MetodoP4 />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <InstallPWA />
+          </BrowserRouter>
+        </SplashScreen>
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>

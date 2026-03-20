@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { EnergyLevel, getEnergyRecommendation, getDISCDescription, getP4BlockageDescription, getTodayKey, calculateStreak } from "@/lib/store";
 import { getPersonalizedPlan } from "@/lib/personalization";
 import { Button } from "@/components/ui/button";
+import ReminderSetup from "@/components/ReminderSetup";
 import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User, BookOpen, LogOut, UserCircle } from "lucide-react";
 
 const reveal = {
@@ -271,6 +272,11 @@ export default function Dashboard() {
             <p className="text-sm font-medium">Progresso</p>
             <p className="text-xs text-muted-foreground mt-0.5">Sua evolução</p>
           </button>
+        </motion.div>
+
+        {/* Lembrete diário */}
+        <motion.div {...reveal} custom={4.5}>
+          <ReminderSetup />
         </motion.div>
 
         {/* Micro-conteúdo — frase do dia */}
