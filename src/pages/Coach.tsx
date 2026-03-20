@@ -174,6 +174,9 @@ export default function Coach() {
   const userName = state.user?.name?.split(" ")[0] || "";
   const discProfile = state.user?.discProfile || "C";
   const blockage = state.user?.p4Blockage || "agir";
+  const todayEntry = state.dailyEntries.find((e) => e.date === getTodayKey());
+  const currentEnergy: EnergyLevel = todayEntry?.energyLevel || "medium";
+  const plan = getPersonalizedPlan(discProfile, blockage, currentEnergy);
 
   // Construir mensagem inicial com contexto
   const buildInitialMessages = (): Message[] => {
@@ -190,6 +193,11 @@ export default function Coach() {
       : `${userName}. Sou o Coach P4. Não vou te motivar. Vou te dar direção.`;
 
     msgs.push({ role: "assistant", content: greeting, type: "normal" });
+
+    // Contexto de energia
+    if (todayEntry?.energyLevel) {
+      msgs.push({ role: "assistant", content: plan.coachTip, type: "proactive" });
+    }
 
     // Reforço de identidade (se completou sessão hoje)
     if (identity) {
