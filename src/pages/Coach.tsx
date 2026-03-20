@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
-import { getDISCDescription, getP4BlockageDescription, DISCProfile, P4Blockage } from "@/lib/store";
+import { getDISCDescription, getP4BlockageDescription, DISCProfile, P4Blockage, EnergyLevel, getTodayKey } from "@/lib/store";
+import { getPersonalizedPlan } from "@/lib/personalization";
 import {
   loadCoachMemory,
   addInteraction,
@@ -173,6 +174,9 @@ export default function Coach() {
   const userName = state.user?.name?.split(" ")[0] || "";
   const discProfile = state.user?.discProfile || "C";
   const blockage = state.user?.p4Blockage || "agir";
+  const todayEntry = state.dailyEntries.find((e) => e.date === getTodayKey());
+  const currentEnergy: EnergyLevel = todayEntry?.energyLevel || "medium";
+  const plan = getPersonalizedPlan(discProfile, blockage, currentEnergy);
 
   // Construir mensagem inicial com contexto
   const buildInitialMessages = (): Message[] => {
@@ -189,6 +193,11 @@ export default function Coach() {
       : `${userName}. Sou o Coach P4. Não vou te motivar. Vou te dar direção.`;
 
     msgs.push({ role: "assistant", content: greeting, type: "normal" });
+
+    // Contexto de energia
+    if (todayEntry?.energyLevel) {
+      msgs.push({ role: "assistant", content: plan.coachTip, type: "proactive" });
+    }
 
     // Reforço de identidade (se completou sessão hoje)
     if (identity) {

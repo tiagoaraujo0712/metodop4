@@ -3,8 +3,9 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
 import { EnergyLevel, getEnergyRecommendation, getDISCDescription, getP4BlockageDescription, getTodayKey, calculateStreak } from "@/lib/store";
+import { getPersonalizedPlan } from "@/lib/personalization";
 import { Button } from "@/components/ui/button";
-import { Zap, Target, ChevronRight, MessageCircle, BarChart3 } from "lucide-react";
+import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User } from "lucide-react";
 
 const reveal = {
   initial: { opacity: 0, y: 14, filter: "blur(4px)" } as any,
@@ -30,6 +31,9 @@ export default function Dashboard() {
   const disc = getDISCDescription(user.discProfile);
   const hasSetEnergy = todayEnergy !== null || !!todayEntry?.energyLevel;
   const currentEnergy = todayEnergy || todayEntry?.energyLevel;
+  const plan = currentEnergy
+    ? getPersonalizedPlan(user.discProfile, user.p4Blockage, currentEnergy)
+    : null;
 
   function handleEnergySelect(level: EnergyLevel) {
     setTodayEnergy(level);
@@ -105,6 +109,42 @@ export default function Dashboard() {
               ))}
             </div>
           </motion.div>
+        ) : plan ? (
+          <>
+            {/* Personalized Profile Card */}
+            <motion.div {...reveal} custom={2} className="p-5 rounded-xl bg-card border border-primary/20 gold-glow space-y-3">
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-primary" />
+                <p className="text-xs text-primary font-medium tracking-widest uppercase">Seu perfil hoje</p>
+              </div>
+              <p className="text-sm font-medium text-foreground">{plan.profileLabel}</p>
+              <p className="text-sm text-foreground/70 whitespace-pre-wrap">{plan.interpretation}</p>
+            </motion.div>
+
+            {/* Approach + Task Type */}
+            <motion.div {...reveal} custom={2.5} className="p-5 rounded-xl bg-card border border-border space-y-3">
+              <div className="flex items-center gap-2">
+                <Zap className="w-4 h-4 text-primary" />
+                <p className="text-xs text-primary font-medium tracking-widest uppercase">Recomendação</p>
+              </div>
+              <p className="text-sm text-foreground/80">{plan.approach}</p>
+              <div className="flex gap-2 pt-1">
+                <span className="px-3 py-1 rounded-lg bg-secondary text-xs text-muted-foreground">{plan.taskType}</span>
+                <span className="px-3 py-1 rounded-lg bg-secondary text-xs text-muted-foreground">{plan.intensity}</span>
+              </div>
+            </motion.div>
+
+            {/* Quick Actions */}
+            <motion.div {...reveal} custom={2.7} className="p-5 rounded-xl bg-card border border-border space-y-2">
+              <p className="text-xs text-primary font-medium tracking-widest uppercase">Plano de ação</p>
+              {plan.actions.map((action, i) => (
+                <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-secondary/30">
+                  <span className="text-primary font-bold text-sm mt-0.5">{i + 1}</span>
+                  <span className="text-sm text-foreground/80">{action}</span>
+                </div>
+              ))}
+            </motion.div>
+          </>
         ) : (
           <motion.div {...reveal} custom={2} className="p-5 rounded-xl bg-card border border-primary/20 gold-glow space-y-3">
             <div className="flex items-center gap-2">
@@ -148,19 +188,39 @@ export default function Dashboard() {
           </button>
         </motion.div>
 
+        {/* Coach tip */}
+        {plan && (
+          <motion.div {...reveal} custom={3.5}>
+            <button
+              onClick={() => navigate("/coach")}
+              className="w-full p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left"
+            >
+              <div className="flex items-start gap-3">
+                <MessageCircle className="w-5 h-5 text-primary mt-0.5 shrink-0" />
+                <div>
+                  <p className="text-sm font-medium">Coach P4</p>
+                  <p className="text-xs text-muted-foreground mt-1">{plan.coachTip}</p>
+                </div>
+              </div>
+            </button>
+          </motion.div>
+        )}
+
         {/* Quick actions */}
         <motion.div {...reveal} custom={4} className="grid grid-cols-2 gap-3">
-          <button
-            onClick={() => navigate("/coach")}
-            className="p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left"
-          >
-            <MessageCircle className="w-5 h-5 text-primary mb-2" />
-            <p className="text-sm font-medium">Coach P4</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Fale com a IA</p>
-          </button>
+          {!plan && (
+            <button
+              onClick={() => navigate("/coach")}
+              className="p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left"
+            >
+              <MessageCircle className="w-5 h-5 text-primary mb-2" />
+              <p className="text-sm font-medium">Coach P4</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Fale com a IA</p>
+            </button>
+          )}
           <button
             onClick={() => navigate("/progress")}
-            className="p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left"
+            className={`p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left ${plan ? "col-span-2" : ""}`}
           >
             <BarChart3 className="w-5 h-5 text-primary mb-2" />
             <p className="text-sm font-medium">Progresso</p>

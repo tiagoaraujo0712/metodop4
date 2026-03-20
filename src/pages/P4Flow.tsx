@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
-import { getTodayKey } from "@/lib/store";
+import { getTodayKey, EnergyLevel } from "@/lib/store";
+import { getP4FlowCopy, getEnergyTaskSuggestion } from "@/lib/personalization";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Pause, Brain, Crosshair, Rocket, Plus, X, Check } from "lucide-react";
@@ -33,6 +34,10 @@ export default function P4Flow() {
   const [focusRunning, setFocusRunning] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval>>();
 
+  // Energia do dia
+  const todayEntry = state.dailyEntries.find((e) => e.date === getTodayKey());
+  const energy: EnergyLevel = todayEntry?.energyLevel || "medium";
+
   // Breathing timer
   useEffect(() => {
     if (!breathing) return;
@@ -59,6 +64,13 @@ export default function P4Flow() {
     return () => clearInterval(timerRef.current);
   }, [focusRunning]);
 
+  // Ajustar tempo de foco baseado na energia
+  useEffect(() => {
+    if (energy === "low") setFocusTime(10 * 60);
+    else if (energy === "high") setFocusTime(25 * 60);
+    else setFocusTime(15 * 60);
+  }, [energy]);
+
   function addMicroStep() {
     if (!newStep.trim()) return;
     setMicroSteps((p) => [...p, newStep.trim()]);
@@ -69,6 +81,7 @@ export default function P4Flow() {
     update((s) => {
       const entries = s.dailyEntries.filter((e) => e.date !== getTodayKey());
       const existing = s.dailyEntries.find((e) => e.date === getTodayKey());
+      const initialTime = energy === "low" ? 10 * 60 : energy === "high" ? 25 * 60 : 15 * 60;
       return {
         ...s,
         dailyEntries: [
@@ -80,7 +93,7 @@ export default function P4Flow() {
             p4Completed: true,
             task,
             microSteps,
-            focusMinutes: Math.round((25 * 60 - focusTime) / 60),
+            focusMinutes: Math.round((initialTime - focusTime) / 60),
             completedAt: new Date().toISOString(),
           },
         ],
@@ -94,6 +107,13 @@ export default function P4Flow() {
     const s = seconds % 60;
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   }
+
+  // Textos adaptados pela energia
+  const pararCopy = getP4FlowCopy(energy, "parar") || "Acelerar quando você está perdido só te faz bater na parede mais rápido. Respire e zere o ruído.";
+  const pensarCopy = getP4FlowCopy(energy, "pensar") || "Trabalho cego traz confusão. Qual é a única tarefa que move o ponteiro de verdade hoje?";
+  const decidirCopy = getP4FlowCopy(energy, "decidir") || "O caos pune. A estrutura salva. O que exatamente você vai fazer?";
+  const agirCopy = getP4FlowCopy(energy, "agir") || "Você não precisa de motivação. Precisa de movimento.";
+  const taskSuggestion = getEnergyTaskSuggestion(energy);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -132,9 +152,7 @@ export default function P4Flow() {
               </div>
 
               <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
-                <p className="text-sm text-foreground/70 text-balance">
-                  "Acelerar quando você está perdido só te faz bater na parede mais rápido. Respire e zere o ruído."
-                </p>
+                <p className="text-sm text-foreground/70 text-balance">{pararCopy}</p>
 
                 {!breathing && breathCount === 60 ? (
                   <Button
@@ -178,9 +196,8 @@ export default function P4Flow() {
               </div>
 
               <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
-                <p className="text-sm text-foreground/70 text-balance">
-                  "Trabalho cego traz confusão. Qual é a única tarefa que move o ponteiro de verdade hoje?"
-                </p>
+                <p className="text-sm text-foreground/70 text-balance">{pensarCopy}</p>
+                <p className="text-xs text-primary/80 italic">{taskSuggestion}</p>
                 <Input
                   value={task}
                   onChange={(e) => setTask(e.target.value)}
@@ -209,9 +226,7 @@ export default function P4Flow() {
               </div>
 
               <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
-                <p className="text-sm text-foreground/70 text-balance">
-                  "O caos pune. A estrutura salva. O que exatamente você vai fazer nos próximos 25 minutos?"
-                </p>
+                <p className="text-sm text-foreground/70 text-balance">{decidirCopy}</p>
 
                 <div className="p-3 rounded-lg bg-secondary/50 text-sm">
                   <span className="text-muted-foreground">Tarefa: </span>
@@ -260,9 +275,7 @@ export default function P4Flow() {
               <div>
                 <Rocket className="w-12 h-12 text-primary mx-auto mb-4" />
                 <h2 className="text-3xl font-bold tracking-tight leading-[1.1]">AGIR</h2>
-                <p className="text-muted-foreground text-sm mt-2">
-                  Você não precisa de motivação. Precisa de movimento.
-                </p>
+                <p className="text-muted-foreground text-sm mt-2">{agirCopy}</p>
               </div>
 
               <div className="space-y-4">
@@ -272,7 +285,11 @@ export default function P4Flow() {
 
                 <p className="text-sm text-muted-foreground">{task}</p>
 
-                {!focusRunning && focusTime === 25 * 60 ? (
+                {energy === "low" && (
+                  <p className="text-xs text-primary/70 italic">Sessão reduzida — 10 min. Faça o mínimo.</p>
+                )}
+
+                {!focusRunning && focusTime === (energy === "low" ? 10 * 60 : energy === "high" ? 25 * 60 : 15 * 60) ? (
                   <Button
                     onClick={() => setFocusRunning(true)}
                     className="w-full h-14 text-lg font-bold active:scale-[0.97] transition-transform"
