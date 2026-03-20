@@ -14,7 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      daily_entries: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          date: string
+          energy_level: string
+          focus_minutes: number | null
+          id: string
+          micro_steps: Json | null
+          p4_completed: boolean
+          task: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          date: string
+          energy_level?: string
+          focus_minutes?: number | null
+          id?: string
+          micro_steps?: Json | null
+          p4_completed?: boolean
+          task?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          date?: string
+          energy_level?: string
+          focus_minutes?: number | null
+          id?: string
+          micro_steps?: Json | null
+          p4_completed?: boolean
+          task?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          disc_profile: string
+          energy_slots: Json
+          id: string
+          name: string
+          onboarding_complete: boolean
+          p4_blockage: string
+          procrastination_level: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          disc_profile?: string
+          energy_slots?: Json
+          id?: string
+          name?: string
+          onboarding_complete?: boolean
+          p4_blockage?: string
+          procrastination_level?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          disc_profile?: string
+          energy_slots?: Json
+          id?: string
+          name?: string
+          onboarding_complete?: boolean
+          p4_blockage?: string
+          procrastination_level?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
