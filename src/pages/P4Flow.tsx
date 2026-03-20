@@ -80,27 +80,26 @@ export default function P4Flow() {
   }
 
   function completeP4() {
+    const existing = state.dailyEntries.find((e) => e.date === getTodayKey());
+    const initialTime = energy === "low" ? 10 * 60 : energy === "high" ? 25 * 60 : 15 * 60;
+    const entry = {
+      ...existing,
+      date: getTodayKey(),
+      energyLevel: existing?.energyLevel || "medium" as const,
+      p4Completed: true,
+      task,
+      microSteps,
+      focusMinutes: Math.round((initialTime - focusTime) / 60),
+      completedAt: new Date().toISOString(),
+    };
     update((s) => {
       const entries = s.dailyEntries.filter((e) => e.date !== getTodayKey());
-      const existing = s.dailyEntries.find((e) => e.date === getTodayKey());
-      const initialTime = energy === "low" ? 10 * 60 : energy === "high" ? 25 * 60 : 15 * 60;
       return {
         ...s,
-        dailyEntries: [
-          ...entries,
-          {
-            ...existing,
-            date: getTodayKey(),
-            energyLevel: existing?.energyLevel || "medium",
-            p4Completed: true,
-            task,
-            microSteps,
-            focusMinutes: Math.round((initialTime - focusTime) / 60),
-            completedAt: new Date().toISOString(),
-          },
-        ],
+        dailyEntries: [...entries, entry],
       };
     });
+    pushDailyEntry(entry);
     navigate("/dashboard");
   }
 
