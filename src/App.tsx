@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import P4Flow from "./pages/P4Flow";
 import Coach from "./pages/Coach";
 import Progress from "./pages/Progress";
+import MetodoP4 from "./pages/MetodoP4";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/p4" element={<P4Flow />} />
           <Route path="/coach" element={<Coach />} />
           <Route path="/progress" element={<Progress />} />
+          <Route path="/metodo" element={<MetodoP4 />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <InstallPWA />
