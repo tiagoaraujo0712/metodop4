@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
+import { useSupabaseSync } from "@/hooks/useSupabaseSync";
 import {
   DISCProfile,
   EnergySlot,
