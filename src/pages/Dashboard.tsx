@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
-import { EnergyLevel, getEnergyRecommendation, getDISCDescription, getTodayKey, calculateStreak } from "@/lib/store";
+import { EnergyLevel, getEnergyRecommendation, getDISCDescription, getP4BlockageDescription, getTodayKey, calculateStreak } from "@/lib/store";
 import { Button } from "@/components/ui/button";
-import { Zap, Brain, Target, Flame, ChevronRight, MessageCircle, BarChart3 } from "lucide-react";
+import { Zap, Target, ChevronRight, MessageCircle, BarChart3 } from "lucide-react";
 
 const reveal = {
   initial: { opacity: 0, y: 14, filter: "blur(4px)" } as any,
@@ -76,8 +76,8 @@ export default function Dashboard() {
             <p className="text-xs text-muted-foreground mt-1">Dias ativos</p>
           </div>
           <div className="p-4 rounded-xl bg-card border border-border text-center">
-            <p className="text-2xl font-bold">{disc.title.split(" ")[0]}</p>
-            <p className="text-xs text-muted-foreground mt-1">Perfil</p>
+            <p className="text-2xl font-bold">{disc.title.slice(0, 3)}</p>
+            <p className="text-xs text-muted-foreground mt-1">{disc.subtitle}</p>
           </div>
         </motion.div>
 
