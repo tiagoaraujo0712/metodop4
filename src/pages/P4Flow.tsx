@@ -177,7 +177,7 @@ export default function P4Flow() {
                   </div>
                 ) : (
                   <Button
-                    onClick={() => setStep(1)}
+                    onClick={() => { setStep(1); window.scrollTo(0, 0); }}
                     className="w-full h-12 text-base font-semibold active:scale-[0.97] transition-transform"
                   >
                     Pronto. Avançar.
