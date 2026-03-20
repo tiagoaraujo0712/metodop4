@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { loadState } from "@/lib/store";
 import InstallPWA from "@/components/InstallPWA";
+import SplashScreen from "@/components/SplashScreen";
 import ScrollToTop from "@/components/ScrollToTop";
 import Auth from "./pages/Auth";
 import Guest from "./pages/Guest";
