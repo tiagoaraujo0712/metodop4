@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { EnergyLevel, getEnergyRecommendation, getDISCDescription, getP4BlockageDescription, getTodayKey, calculateStreak } from "@/lib/store";
 import { getPersonalizedPlan } from "@/lib/personalization";
 import { Button } from "@/components/ui/button";
+import ReminderSetup from "@/components/ReminderSetup";
 import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User, BookOpen, LogOut, UserCircle } from "lucide-react";
 
 const reveal = {
