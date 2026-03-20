@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
+import { useSupabaseSync } from "@/hooks/useSupabaseSync";
+import { useAuth } from "@/hooks/useAuth";
 import { EnergyLevel, getEnergyRecommendation, getDISCDescription, getP4BlockageDescription, getTodayKey, calculateStreak } from "@/lib/store";
 import { getPersonalizedPlan } from "@/lib/personalization";
 import { Button } from "@/components/ui/button";
-import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User, BookOpen } from "lucide-react";
+import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User, BookOpen, LogOut } from "lucide-react";
 
 const reveal = {
   initial: { opacity: 0, y: 14, filter: "blur(4px)" } as any,
