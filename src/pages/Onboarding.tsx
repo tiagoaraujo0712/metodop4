@@ -210,6 +210,7 @@ const periods = [
 
 export default function Onboarding() {
   const { state, update } = useAppState();
+  const { pushProfile } = useSupabaseSync();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isRedoDISC = searchParams.get("redo") === "disc";
