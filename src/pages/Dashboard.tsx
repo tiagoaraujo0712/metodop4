@@ -95,11 +95,11 @@ export default function Dashboard() {
           </h1>
         </div>
         <button
-          onClick={async () => { await signOut(); navigate("/auth"); }}
+          onClick={() => navigate("/profile")}
           className="p-2 text-muted-foreground hover:text-foreground active:scale-[0.95] transition-all"
-          title="Sair"
+          title="Perfil"
         >
-          <LogOut className="w-5 h-5" />
+          <UserCircle className="w-5 h-5" />
         </button>
       </motion.div>
 
