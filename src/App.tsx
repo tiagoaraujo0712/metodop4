@@ -7,6 +7,7 @@ import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { loadState } from "@/lib/store";
 import InstallPWA from "@/components/InstallPWA";
 import Auth from "./pages/Auth";
+import Guest from "./pages/Guest";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import P4Flow from "./pages/P4Flow";
@@ -32,6 +33,16 @@ function RootRedirect() {
   return state.user?.onboardingComplete ? <Navigate to="/dashboard" replace /> : <Navigate to="/onboarding" replace />;
 }
 
+function AuthRedirect({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+  if (loading) return null;
+  if (user) {
+    const state = loadState();
+    return state.user?.onboardingComplete ? <Navigate to="/dashboard" replace /> : <Navigate to="/onboarding" replace />;
+  }
+  return <>{children}</>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -41,13 +52,14 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<RootRedirect />} />
-            <Route path="/auth" element={<Auth />} />
+            <Route path="/auth" element={<AuthRedirect><Auth /></AuthRedirect>} />
+            <Route path="/guest" element={<Guest />} />
             <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/p4" element={<ProtectedRoute><P4Flow /></ProtectedRoute>} />
             <Route path="/coach" element={<ProtectedRoute><Coach /></ProtectedRoute>} />
             <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
-            <Route path="/metodo" element={<ProtectedRoute><MetodoP4 /></ProtectedRoute>} />
+            <Route path="/metodo" element={<MetodoP4 />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <InstallPWA />
