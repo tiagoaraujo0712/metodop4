@@ -5,12 +5,26 @@ import { useAppState } from "@/hooks/useAppState";
 import { EnergyLevel, getEnergyRecommendation, getDISCDescription, getP4BlockageDescription, getTodayKey, calculateStreak } from "@/lib/store";
 import { getPersonalizedPlan } from "@/lib/personalization";
 import { Button } from "@/components/ui/button";
-import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User } from "lucide-react";
+import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User, BookOpen } from "lucide-react";
 
 const reveal = {
   initial: { opacity: 0, y: 14, filter: "blur(4px)" } as any,
   animate: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as any } },
 };
+
+// Micro-conteúdo — frases curtas sobre comportamento
+const microInsights = [
+  "A ação cura. A inação adoece.",
+  "Consistência vence talento todos os dias.",
+  "Feito é melhor que perfeito.",
+  "Você não precisa de motivação. Precisa de direção.",
+  "O primeiro passo não precisa ser grande. Precisa existir.",
+  "Repetição consciente cria transformação.",
+  "Quem espera o momento perfeito nunca começa.",
+  "Disciplina é escolher entre o que você quer agora e o que você quer mais.",
+  "O padrão só muda quando a resposta muda.",
+  "Agir sem vontade é o que separa quem muda de quem reclama.",
+];
 
 export default function Dashboard() {
   const { state, update } = useAppState();
@@ -34,6 +48,10 @@ export default function Dashboard() {
   const plan = currentEnergy
     ? getPersonalizedPlan(user.discProfile, user.p4Blockage, currentEnergy)
     : null;
+
+  // Frase do dia baseada na data
+  const dayIndex = new Date().getDate() % microInsights.length;
+  const dailyInsight = microInsights[dayIndex];
 
   function handleEnergySelect(level: EnergyLevel) {
     setTodayEnergy(level);
@@ -59,7 +77,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background pb-24">
-      {/* Header */}
+      {/* Header — left-aligned */}
       <motion.div {...reveal} custom={0} className="px-6 pt-12 pb-6">
         <p className="text-muted-foreground text-sm">{getCurrentPeriod()}</p>
         <h1 className="text-2xl font-bold mt-1">
@@ -71,15 +89,15 @@ export default function Dashboard() {
       <div className="px-6 space-y-4">
         {/* Stats */}
         <motion.div {...reveal} custom={1} className="grid grid-cols-3 gap-3">
-          <div className="p-4 rounded-xl bg-card border border-border text-center">
+          <div className="p-4 rounded-xl bg-card border border-border text-left">
             <p className="text-2xl font-bold text-primary">{streak}</p>
-            <p className="text-xs text-muted-foreground mt-1">Streak</p>
+            <p className="text-xs text-muted-foreground mt-1">Sequência</p>
           </div>
-          <div className="p-4 rounded-xl bg-card border border-border text-center">
+          <div className="p-4 rounded-xl bg-card border border-border text-left">
             <p className="text-2xl font-bold">{totalDays}</p>
             <p className="text-xs text-muted-foreground mt-1">Dias ativos</p>
           </div>
-          <div className="p-4 rounded-xl bg-card border border-border text-center">
+          <div className="p-4 rounded-xl bg-card border border-border text-left">
             <p className="text-2xl font-bold">{disc.title.slice(0, 3)}</p>
             <p className="text-xs text-muted-foreground mt-1">{disc.subtitle}</p>
           </div>
@@ -101,7 +119,7 @@ export default function Dashboard() {
                 <button
                   key={level}
                   onClick={() => handleEnergySelect(level)}
-                  className="p-4 rounded-xl bg-secondary/50 border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.95] text-center"
+                  className="p-4 rounded-xl bg-secondary/50 border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.95] text-left"
                 >
                   <span className="text-2xl">{emoji}</span>
                   <p className="text-xs font-medium mt-2">{label}</p>
@@ -134,15 +152,17 @@ export default function Dashboard() {
               </div>
             </motion.div>
 
-            {/* Quick Actions */}
-            <motion.div {...reveal} custom={2.7} className="p-5 rounded-xl bg-card border border-border space-y-2">
+            {/* Plano de ação — corrigido para mostrar todos os passos incluindo o primeiro */}
+            <motion.div {...reveal} custom={2.7} className="p-5 rounded-xl bg-card border border-border space-y-3">
               <p className="text-xs text-primary font-medium tracking-widest uppercase">Plano de ação</p>
-              {plan.actions.map((action, i) => (
-                <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-secondary/30">
-                  <span className="text-primary font-bold text-sm mt-0.5">{i + 1}</span>
-                  <span className="text-sm text-foreground/80">{action}</span>
-                </div>
-              ))}
+              <div className="space-y-2">
+                {plan.actions.map((action, i) => (
+                  <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-secondary/30">
+                    <span className="w-6 h-6 rounded-md bg-primary/20 text-primary font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+                    <span className="text-sm text-foreground/80">{action}</span>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </>
         ) : (
@@ -215,12 +235,20 @@ export default function Dashboard() {
             >
               <MessageCircle className="w-5 h-5 text-primary mb-2" />
               <p className="text-sm font-medium">Coach P4</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Fale com a IA</p>
+              <p className="text-xs text-muted-foreground mt-0.5">Fale com o mentor</p>
             </button>
           )}
           <button
+            onClick={() => navigate("/metodo")}
+            className="p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left"
+          >
+            <BookOpen className="w-5 h-5 text-primary mb-2" />
+            <p className="text-sm font-medium">Método P4</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Entenda o método</p>
+          </button>
+          <button
             onClick={() => navigate("/progress")}
-            className={`p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left ${plan ? "col-span-2" : ""}`}
+            className={`p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left ${!plan && "col-span-2 sm:col-span-1"}`}
           >
             <BarChart3 className="w-5 h-5 text-primary mb-2" />
             <p className="text-sm font-medium">Progresso</p>
@@ -228,10 +256,10 @@ export default function Dashboard() {
           </button>
         </motion.div>
 
-        {/* Daily phrase */}
+        {/* Micro-conteúdo — frase do dia */}
         <motion.div {...reveal} custom={5} className="pt-4">
-          <p className="text-center text-xs text-muted-foreground italic">
-            "A ação cura. A inação adoece."
+          <p className="text-xs text-muted-foreground italic">
+            "{dailyInsight}"
           </p>
         </motion.div>
       </div>
