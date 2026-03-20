@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
-import { getDISCDescription } from "@/lib/store";
+import { getDISCDescription, getP4BlockageDescription, DISCProfile, P4Blockage } from "@/lib/store";
 import { ArrowLeft, Send } from "lucide-react";
 
 interface Message {
@@ -10,29 +10,37 @@ interface Message {
   content: string;
 }
 
-// Local Coach P4 — responds based on DISC profile and P4 principles
-function getCoachResponse(input: string, discProfile: string, userName: string): string {
+function getCoachResponse(input: string, discProfile: DISCProfile, blockage: P4Blockage, userName: string): string {
   const lc = input.toLowerCase();
-  const disc = getDISCDescription(discProfile as any);
+  const disc = getDISCDescription(discProfile);
+  const block = getP4BlockageDescription(blockage);
 
-  // Pattern matching for common inputs
-  if (lc.includes("travado") || lc.includes("paralisado") || lc.includes("não consigo")) {
-    if (discProfile === "D") return `${userName}, você age rápido mas sem rumo. Para. Qual é a única coisa que importa agora? Define e executa. Sem pensar mais.`;
-    if (discProfile === "I") return `Você começou algo e parou, certo? O problema não é a tarefa. É a consistência. Volte pra onde parou. Faça 2 minutos. Só 2.`;
-    if (discProfile === "S") return `Você sabe o que fazer. O problema é que está esperando o momento perfeito. Ele não existe. Decida agora. A ação cura.`;
-    return `Você está pensando demais. Fecha a análise. Abre o que precisa fazer. 2 minutos. Vai.`;
+  // Tonalidade conforme DISC
+  const tone = disc.coachTone;
+
+  if (lc.includes("travado") || lc.includes("paralisado") || lc.includes("não consigo") || lc.includes("nao consigo")) {
+    if (discProfile === "D") return `${userName}, pare de tentar resolver tudo ao mesmo tempo. Escolha uma coisa. Execute. Agora.`;
+    if (discProfile === "I") return `${userName}, vamos começar pequeno e ganhar ritmo. Qual é a menor coisa que você pode fazer agora? Faz ela.`;
+    if (discProfile === "S") return `${userName}, vamos no seu ritmo, mas com consistência. Você não precisa do momento perfeito. Precisa de movimento.`;
+    return `${userName}, vamos organizar isso em passos simples. Qual é o primeiro passo? Só o primeiro. Nada mais.`;
   }
 
   if (lc.includes("cansado") || lc.includes("sem energia") || lc.includes("exausto")) {
-    return `Energia baixa não é desculpa. É informação. Faça o mínimo: uma micro-tarefa. Abra o caderno. Escreva uma frase. Só isso. Descansar depois é método, não é fracasso.`;
+    if (discProfile === "D") return `Energia baixa não é desculpa pra parar. É informação. Faça o mínimo. Uma coisa. Vai.`;
+    if (discProfile === "I") return `Tá cansado? Normal. Mas uma micro-tarefa muda tudo. 2 minutos. Só pra não zerar o dia.`;
+    if (discProfile === "S") return `Tudo bem estar cansado. Faça algo pequeno no seu ritmo. Consistência importa mais que intensidade.`;
+    return `Energia baixa é dado, não sentença. Faça a menor tarefa possível. Organizar um item já conta.`;
   }
 
   if (lc.includes("procrastinando") || lc.includes("adiando") || lc.includes("procrastina")) {
-    return `Procrastinação não é preguiça. É um padrão automático. Qual dos 4 pilares está falhando?\n\n• Não parou pra respirar? → PARAR\n• Não tem clareza? → PENSAR\n• Não decidiu? → DECIDIR\n• Decidiu e não fez? → AGIR\n\nIdentifique e corrija. Agora.`;
+    return `Procrastinação não é preguiça. É um padrão automático. Seu ponto de travamento é "${block.title}".\n\n${block.description}\n\n👉 ${block.action}`;
   }
 
   if (lc.includes("desculpa") || lc.includes("amanhã") || lc.includes("depois")) {
-    return `"Amanhã" é a mentira mais usada por quem não quer enfrentar o hoje. Você vai continuar mentindo pra si mesmo ou vai agir? A escolha é binária.`;
+    if (discProfile === "D") return `"Amanhã" é a mentira mais usada. Pare de pensar e execute. Agora.`;
+    if (discProfile === "I") return `Empolgação sem ação é só imaginação. O que você vai fazer agora? Escolha e comece.`;
+    if (discProfile === "S") return `Adiar te dá conforto temporário, mas rouba seu progresso. Faça uma coisa pequena agora.`;
+    return `Você está usando "depois" como escudo contra o medo de errar. Mas feito imperfeito vale mais que perfeito adiado.`;
   }
 
   if (lc.includes("motivação") || lc.includes("motivado")) {
@@ -43,8 +51,29 @@ function getCoachResponse(input: string, discProfile: string, userName: string):
     return `Gratidão é bom. Ação é melhor. Vai executar?`;
   }
 
-  // Default based on DISC
-  return `${userName}, direto ao ponto: ${disc.description} Seu foco deve ser: ${disc.focus}. Não complique. O que você precisa fazer agora? Me diz e eu te dou o caminho.`;
+  if (lc.includes("medo") || lc.includes("ansiedade") || lc.includes("ansioso")) {
+    if (discProfile === "D") return `Medo é sinal de que é importante. Age através dele.`;
+    if (discProfile === "I") return `A ansiedade diminui quando você age. Comece com algo tão pequeno que não dá pra falhar.`;
+    if (discProfile === "S") return `Seu medo é de errar. Mas errar faz parte. Começar imperfeito é melhor que não começar.`;
+    return `Você está tentando prever todos os cenários. Impossível. Aceite a imperfeição e dê o primeiro passo.`;
+  }
+
+  // Default baseado no DISC + blockage
+  const blockAdvice: Record<P4Blockage, string> = {
+    parar: "Primeiro, pare o que está fazendo. Respire. Depois me diz: o que você está evitando?",
+    pensar: "Você precisa de clareza. Me diz em uma frase: qual é a tarefa mais importante agora?",
+    decidir: "Você já sabe o que fazer. Decida agora. Me diz: o que você vai fazer nos próximos 15 minutos?",
+    agir: "Chega de planejar. O que é a menor ação possível? Faz por 2 minutos. Só isso.",
+  };
+
+  const discIntro: Record<DISCProfile, string> = {
+    D: `${userName}, direto ao ponto.`,
+    I: `${userName}, vamos focar.`,
+    S: `${userName}, com calma mas com direção.`,
+    C: `${userName}, vamos simplificar.`,
+  };
+
+  return `${discIntro[discProfile]} ${blockAdvice[blockage]}`;
 }
 
 export default function Coach() {
@@ -71,11 +100,11 @@ export default function Coach() {
     setInput("");
     setIsTyping(true);
 
-    // Simulate thinking delay
     setTimeout(() => {
       const response = getCoachResponse(
         userMsg.content,
         state.user?.discProfile || "C",
+        state.user?.p4Blockage || "agir",
         state.user?.name?.split(" ")[0] || ""
       );
       setMessages((p) => [...p, { role: "assistant", content: response }]);
