@@ -273,18 +273,20 @@ export default function Onboarding() {
   function finishOnboarding() {
     const profile = getDominantProfile();
     const blockage = getDominantBlockage();
+    const userProfile = {
+      name,
+      discProfile: profile,
+      p4Blockage: blockage,
+      procrastinationLevel: procLevel,
+      energySlots,
+      onboardingComplete: true,
+      createdAt: new Date().toISOString(),
+    };
     update((state) => ({
       ...state,
-      user: {
-        name,
-        discProfile: profile,
-        p4Blockage: blockage,
-        procrastinationLevel: procLevel,
-        energySlots,
-        onboardingComplete: true,
-        createdAt: new Date().toISOString(),
-      },
+      user: userProfile,
     }));
+    pushProfile(userProfile);
     navigate("/dashboard");
   }
 
