@@ -274,6 +274,11 @@ export default function Dashboard() {
           </button>
         </motion.div>
 
+        {/* Lembrete diário */}
+        <motion.div {...reveal} custom={4.5}>
+          <ReminderSetup />
+        </motion.div>
+
         {/* Micro-conteúdo — frase do dia */}
         <motion.div {...reveal} custom={5} className="pt-4">
           <p className="text-xs text-muted-foreground italic">
