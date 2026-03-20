@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
+import { useSupabaseSync } from "@/hooks/useSupabaseSync";
 import {
   DISCProfile,
   EnergySlot,
@@ -209,6 +210,7 @@ const periods = [
 
 export default function Onboarding() {
   const { state, update } = useAppState();
+  const { pushProfile } = useSupabaseSync();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isRedoDISC = searchParams.get("redo") === "disc";
@@ -271,18 +273,20 @@ export default function Onboarding() {
   function finishOnboarding() {
     const profile = getDominantProfile();
     const blockage = getDominantBlockage();
+    const userProfile = {
+      name,
+      discProfile: profile,
+      p4Blockage: blockage,
+      procrastinationLevel: procLevel,
+      energySlots,
+      onboardingComplete: true,
+      createdAt: new Date().toISOString(),
+    };
     update((state) => ({
       ...state,
-      user: {
-        name,
-        discProfile: profile,
-        p4Blockage: blockage,
-        procrastinationLevel: procLevel,
-        energySlots,
-        onboardingComplete: true,
-        createdAt: new Date().toISOString(),
-      },
+      user: userProfile,
     }));
+    pushProfile(userProfile);
     navigate("/dashboard");
   }
 

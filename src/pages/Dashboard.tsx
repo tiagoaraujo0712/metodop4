@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
+import { useSupabaseSync } from "@/hooks/useSupabaseSync";
+import { useAuth } from "@/hooks/useAuth";
 import { EnergyLevel, getEnergyRecommendation, getDISCDescription, getP4BlockageDescription, getTodayKey, calculateStreak } from "@/lib/store";
 import { getPersonalizedPlan } from "@/lib/personalization";
 import { Button } from "@/components/ui/button";
-import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User, BookOpen } from "lucide-react";
+import { Zap, Target, ChevronRight, MessageCircle, BarChart3, User, BookOpen, LogOut } from "lucide-react";
 
 const reveal = {
   initial: { opacity: 0, y: 14, filter: "blur(4px)" } as any,
@@ -28,6 +30,8 @@ const microInsights = [
 
 export default function Dashboard() {
   const { state, update } = useAppState();
+  const { pushDailyEntry } = useSupabaseSync();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   const [todayEnergy, setTodayEnergy] = useState<EnergyLevel | null>(null);
 
@@ -55,16 +59,20 @@ export default function Dashboard() {
 
   function handleEnergySelect(level: EnergyLevel) {
     setTodayEnergy(level);
+    const entry = {
+      date: getTodayKey(),
+      energyLevel: level,
+      p4Completed: todayEntry?.p4Completed || false,
+      ...todayEntry,
+    };
     update((s) => {
       const entries = s.dailyEntries.filter((e) => e.date !== getTodayKey());
       return {
         ...s,
-        dailyEntries: [
-          ...entries,
-          { date: getTodayKey(), energyLevel: level, p4Completed: todayEntry?.p4Completed || false, ...todayEntry },
-        ],
+        dailyEntries: [...entries, entry],
       };
     });
+    pushDailyEntry(entry);
   }
 
   function getCurrentPeriod() {
@@ -78,12 +86,21 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header — left-aligned */}
-      <motion.div {...reveal} custom={0} className="px-6 pt-12 pb-6">
-        <p className="text-muted-foreground text-sm">{getCurrentPeriod()}</p>
-        <h1 className="text-2xl font-bold mt-1">
-          {user.name.split(" ")[0]}
-          <span className="text-muted-foreground font-normal">, vamos.</span>
-        </h1>
+      <motion.div {...reveal} custom={0} className="px-6 pt-12 pb-6 flex items-center justify-between">
+        <div>
+          <p className="text-muted-foreground text-sm">{getCurrentPeriod()}</p>
+          <h1 className="text-2xl font-bold mt-1">
+            {user.name.split(" ")[0]}
+            <span className="text-muted-foreground font-normal">, vamos.</span>
+          </h1>
+        </div>
+        <button
+          onClick={async () => { await signOut(); navigate("/auth"); }}
+          className="p-2 text-muted-foreground hover:text-foreground active:scale-[0.95] transition-all"
+          title="Sair"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
       </motion.div>
 
       <div className="px-6 space-y-4">
