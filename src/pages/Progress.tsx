@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
 import { calculateStreak, getDISCDescription, getP4BlockageDescription, getFullDiagnosis } from "@/lib/store";
-import { ArrowLeft, Flame, Calendar, TrendingUp, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Flame, Calendar, TrendingUp, CheckCircle2, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const reveal = {
   initial: { opacity: 0, y: 14, filter: "blur(4px)" } as any,
@@ -35,6 +36,10 @@ export default function Progress() {
       date: key,
     };
   });
+
+  function handleRedoDISC() {
+    navigate("/onboarding?redo=disc");
+  }
 
   return (
     <div className="min-h-screen bg-background pb-12">
@@ -115,6 +120,18 @@ export default function Progress() {
           <p className="text-xs text-primary font-medium tracking-widest uppercase">Diagnóstico Completo</p>
           <p className="text-sm text-foreground/90">{diagnosis.summary}</p>
           <p className="text-sm text-muted-foreground">{diagnosis.problem}</p>
+        </motion.div>
+
+        {/* Redo DISC test */}
+        <motion.div {...reveal} custom={6}>
+          <Button
+            onClick={handleRedoDISC}
+            variant="outline"
+            className="w-full h-12 text-sm font-medium active:scale-[0.97] transition-transform gap-2"
+          >
+            <RotateCcw className="w-4 h-4" />
+            Refazer teste DISC
+          </Button>
         </motion.div>
       </div>
     </div>
