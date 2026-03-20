@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAppState } from "@/hooks/useAppState";
-import { getDISCDescription, getP4BlockageDescription, DISCProfile, P4Blockage } from "@/lib/store";
+import { getDISCDescription, getP4BlockageDescription, DISCProfile, P4Blockage, EnergyLevel, getTodayKey } from "@/lib/store";
+import { getPersonalizedPlan } from "@/lib/personalization";
 import {
   loadCoachMemory,
   addInteraction,
