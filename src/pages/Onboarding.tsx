@@ -248,8 +248,10 @@ export default function Onboarding() {
     setDiscAnswers(next);
     if (currentDiscQ < discQuestions.length - 1) {
       setCurrentDiscQ((p) => p + 1);
+      window.scrollTo(0, 0);
     } else {
       setStep(3);
+      window.scrollTo(0, 0);
     }
   }
 
