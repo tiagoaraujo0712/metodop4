@@ -177,7 +177,7 @@ export default function P4Flow() {
                   </div>
                 ) : (
                   <Button
-                    onClick={() => setStep(1)}
+                    onClick={() => { setStep(1); window.scrollTo(0, 0); }}
                     className="w-full h-12 text-base font-semibold active:scale-[0.97] transition-transform"
                   >
                     Pronto. Avançar.
@@ -207,7 +207,7 @@ export default function P4Flow() {
                   autoFocus
                 />
                 <Button
-                  onClick={() => setStep(2)}
+                  onClick={() => { setStep(2); window.scrollTo(0, 0); }}
                   disabled={!task.trim()}
                   className="w-full h-12 text-base font-semibold active:scale-[0.97] transition-transform"
                 >
@@ -260,7 +260,7 @@ export default function P4Flow() {
                 </div>
 
                 <Button
-                  onClick={() => setStep(3)}
+                  onClick={() => { setStep(3); window.scrollTo(0, 0); }}
                   disabled={microSteps.length === 0}
                   className="w-full h-12 text-base font-semibold active:scale-[0.97] transition-transform"
                 >

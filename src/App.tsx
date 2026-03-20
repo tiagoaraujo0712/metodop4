@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import { loadState } from "@/lib/store";
 import InstallPWA from "@/components/InstallPWA";
+import ScrollToTop from "@/components/ScrollToTop";
 import Auth from "./pages/Auth";
 import Guest from "./pages/Guest";
 import Onboarding from "./pages/Onboarding";
@@ -13,6 +14,7 @@ import Dashboard from "./pages/Dashboard";
 import P4Flow from "./pages/P4Flow";
 import Coach from "./pages/Coach";
 import Progress from "./pages/Progress";
+import Profile from "./pages/Profile";
 import MetodoP4 from "./pages/MetodoP4";
 import NotFound from "./pages/NotFound";
 
@@ -50,6 +52,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<RootRedirect />} />
             <Route path="/auth" element={<AuthRedirect><Auth /></AuthRedirect>} />
@@ -59,6 +62,7 @@ const App = () => (
             <Route path="/p4" element={<ProtectedRoute><P4Flow /></ProtectedRoute>} />
             <Route path="/coach" element={<ProtectedRoute><Coach /></ProtectedRoute>} />
             <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/metodo" element={<MetodoP4 />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

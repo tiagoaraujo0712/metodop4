@@ -248,8 +248,10 @@ export default function Onboarding() {
     setDiscAnswers(next);
     if (currentDiscQ < discQuestions.length - 1) {
       setCurrentDiscQ((p) => p + 1);
+      window.scrollTo(0, 0);
     } else {
       setStep(3);
+      window.scrollTo(0, 0);
     }
   }
 
@@ -258,8 +260,10 @@ export default function Onboarding() {
     setP4Answers(next);
     if (currentP4Q < p4Questions.length - 1) {
       setCurrentP4Q((p) => p + 1);
+      window.scrollTo(0, 0);
     } else {
       setStep(4);
+      window.scrollTo(0, 0);
     }
   }
 
