@@ -5,11 +5,8 @@ import { calculateStreak, getDISCDescription } from "@/lib/store";
 import { ArrowLeft, Flame, Calendar, TrendingUp } from "lucide-react";
 
 const reveal = {
-  initial: { opacity: 0, y: 14, filter: "blur(4px)" },
-  animate: (i: number) => ({
-    opacity: 1, y: 0, filter: "blur(0px)",
-    transition: { delay: i * 0.08, duration: 0.6, ease: [0.16, 1, 0.3, 1] },
-  }),
+  initial: { opacity: 0, y: 14, filter: "blur(4px)" } as any,
+  animate: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as any } },
 };
 
 export default function Progress() {
