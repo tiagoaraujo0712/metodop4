@@ -86,12 +86,21 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-background pb-24">
       {/* Header — left-aligned */}
-      <motion.div {...reveal} custom={0} className="px-6 pt-12 pb-6">
-        <p className="text-muted-foreground text-sm">{getCurrentPeriod()}</p>
-        <h1 className="text-2xl font-bold mt-1">
-          {user.name.split(" ")[0]}
-          <span className="text-muted-foreground font-normal">, vamos.</span>
-        </h1>
+      <motion.div {...reveal} custom={0} className="px-6 pt-12 pb-6 flex items-center justify-between">
+        <div>
+          <p className="text-muted-foreground text-sm">{getCurrentPeriod()}</p>
+          <h1 className="text-2xl font-bold mt-1">
+            {user.name.split(" ")[0]}
+            <span className="text-muted-foreground font-normal">, vamos.</span>
+          </h1>
+        </div>
+        <button
+          onClick={async () => { await signOut(); navigate("/auth"); }}
+          className="p-2 text-muted-foreground hover:text-foreground active:scale-[0.95] transition-all"
+          title="Sair"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
       </motion.div>
 
       <div className="px-6 space-y-4">
