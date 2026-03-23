@@ -73,7 +73,7 @@ export default function MetodoP4() {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>
-          <h1 className="text-xl font-bold">Método P4</h1>
+          <h1 className="text-xl font-bold">Sistema P4</h1>
           <p className="text-xs text-muted-foreground">Parar · Pensar · Decidir · Agir</p>
         </div>
       </div>
@@ -88,7 +88,7 @@ export default function MetodoP4() {
           className="p-5 rounded-xl bg-card border border-border space-y-3"
         >
           <p className="text-sm text-foreground/80 leading-relaxed">
-            O Método P4 é um sistema de quebra de padrões. Não é produtividade. É comportamento.
+            O Sistema P4 é um sistema de quebra de padrões. Não é produtividade. É comportamento.
           </p>
           <p className="text-sm text-foreground/60">
             Cada vez que você trava, está preso em um dos 4 pilares. Identifique onde e desbloqueie.

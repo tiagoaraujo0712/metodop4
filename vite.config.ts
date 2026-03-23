@@ -23,7 +23,7 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
       },
       manifest: {
-        name: "Método P4",
+        name: "Sistema P4",
         short_name: "P4",
         description: "Sistema de quebra de padrões comportamentais. A ação cura. A inação adoece.",
         theme_color: "#0a0a0a",

@@ -31,7 +31,7 @@ export default function ReminderSetup() {
 
       return setTimeout(() => {
         if (Notification.permission === "granted") {
-          new Notification("Método P4", {
+          new Notification("Sistema P4", {
             body: "Hora da sua sessão P4. A ação cura. 🔥",
             icon: "/icon-192.png",
             badge: "/icon-192.png",

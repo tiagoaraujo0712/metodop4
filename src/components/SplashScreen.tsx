@@ -23,7 +23,7 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
           >
             <motion.img
               src={logoP4}
-              alt="Método P4"
+              alt="Sistema P4"
               initial={{ opacity: 0, scale: 0.85, filter: "blur(10px)" }}
               animate={{
                 opacity: 1,

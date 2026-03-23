@@ -261,7 +261,7 @@ export default function Dashboard() {
             className="p-4 rounded-xl bg-card border border-border hover:border-primary/40 transition-all duration-200 active:scale-[0.97] text-left"
           >
             <BookOpen className="w-5 h-5 text-primary mb-2" />
-            <p className="text-sm font-medium">Método P4</p>
+            <p className="text-sm font-medium">Sistema P4</p>
             <p className="text-xs text-muted-foreground mt-0.5">Entenda o método</p>
           </button>
           <button

@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Mail, Lock, Eye, EyeOff, User } from "lucide-react";
 import { toast } from "sonner";
 
 const fadeSlide = {
@@ -33,7 +33,12 @@ export default function Auth() {
         if (error) {
           toast.error(error.message);
         } else {
-          toast.success("Conta criada com sucesso!");
+          toast.success("Conta criada! Entrando...");
+          // Auto-confirm is enabled, so sign in immediately
+          const { error: signInError } = await signIn(email, password);
+          if (signInError) {
+            toast.error(signInError.message);
+          }
         }
       } else {
         const { error } = await signIn(email, password);
@@ -71,7 +76,7 @@ export default function Auth() {
       <motion.div {...fadeSlide} className="max-w-md w-full space-y-8">
         <div className="space-y-2 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-balance leading-[1.1]">
-            Método <span className="text-gold">P4</span>
+            Sistema <span className="text-gold">P4</span>
           </h1>
           <p className="text-muted-foreground text-sm tracking-widest uppercase">
             Parar · Pensar · Decidir · Agir
@@ -119,7 +124,7 @@ export default function Auth() {
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Sua senha"
+                placeholder="Sua senha (mínimo 6 caracteres)"
                 className="h-12 pl-10 pr-10 text-base bg-card"
                 minLength={6}
                 required
@@ -139,7 +144,7 @@ export default function Auth() {
             disabled={loading}
             className="w-full h-12 text-base font-semibold active:scale-[0.97] transition-transform"
           >
-            {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar conta"}
+            {loading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar conta e entrar"}
             <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
         </form>

@@ -66,7 +66,7 @@ export function AppAccessBanner() {
       <div>
         <h3 className="text-xl font-bold">Pronto para começar?</h3>
         <p className="text-muted-foreground mt-2">
-          Acesse o aplicativo Método P4 e inicie sua transformação agora mesmo.
+          Acesse o aplicativo Sistema P4 e inicie sua transformação agora mesmo.
         </p>
       </div>
       <AppAccessButton size="lg" />
