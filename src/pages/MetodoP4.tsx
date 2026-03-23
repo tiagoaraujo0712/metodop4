@@ -73,7 +73,7 @@ export default function MetodoP4() {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>
-          <h1 className="text-xl font-bold">Método P4</h1>
+          <h1 className="text-xl font-bold">Sistema P4</h1>
           <p className="text-xs text-muted-foreground">Parar · Pensar · Decidir · Agir</p>
         </div>
       </div>
