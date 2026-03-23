@@ -146,7 +146,7 @@ export default function Guest() {
                   <BookOpen className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm">Conheça o Método P4</p>
+                  <p className="font-semibold text-sm">Conheça o Sistema P4</p>
                   <p className="text-xs text-muted-foreground mt-0.5">Parar · Pensar · Decidir · Agir</p>
                 </div>
               </div>

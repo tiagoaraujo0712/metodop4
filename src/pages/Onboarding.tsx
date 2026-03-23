@@ -599,7 +599,7 @@ export default function Onboarding() {
               </div>
 
               <Button onClick={finishOnboarding} className="w-full h-12 text-base font-semibold active:scale-[0.97] transition-transform">
-                Entrar no Método P4 <ArrowRight className="ml-2 w-4 h-4" />
+                Entrar no Sistema P4 <ArrowRight className="ml-2 w-4 h-4" />
               </Button>
             </motion.div>
           );

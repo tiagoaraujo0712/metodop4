@@ -1,4 +1,4 @@
-// Gamification System for Método P4
+// Gamification System for Sistema P4
 // Manages streaks, badges, and achievement tracking
 
 export type BadgeType = 
