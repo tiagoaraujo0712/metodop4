@@ -316,7 +316,7 @@ export default function Onboarding() {
           <motion.div key="intro" {...fadeSlide} className="max-w-md w-full text-center space-y-8">
             <div className="space-y-2">
               <h1 className="text-4xl font-bold tracking-tight text-balance leading-[1.1]">
-                Método <span className="text-gold">P4</span>
+                Sistema <span className="text-gold">P4</span>
               </h1>
               <p className="text-muted-foreground text-sm tracking-widest uppercase">
                 Parar · Pensar · Decidir · Agir
